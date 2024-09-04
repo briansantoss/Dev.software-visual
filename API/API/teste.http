@@ -6,5 +6,9 @@ GET http://localhost:5262/segundafunc
 
 ### Testando o retorno do endereço
 GET http://localhost:5262/retornarendereco
+
 ### Testando a listagem de produtos
 GET  http://localhost:5262/produto/listar
+
+###
+POST http://localhost:5262/produto/cadastrar/agua

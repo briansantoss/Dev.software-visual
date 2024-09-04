@@ -3,8 +3,6 @@ using API.Models;
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/", () => "API de Produtos");
-
 List<Produto> produtos = new List<Produto>();
 produtos.Add(new Produto()
 {
@@ -27,9 +25,22 @@ produtos.Add(new Produto()
     Quantidade = 24
 });
 
+app.MapGet("/", () => "API de Produtos");
+
+// GET: /produto/listar
 app.MapGet("/produto/listar", () => 
 {
-    return produtos;
+    return Results.Ok(produtos);
+});
+
+// POST: /produto/cadastrar
+app.MapPost("/produto/cadastrar/{nome}", (string nome) => 
+{
+    Produto produto = new Produto();
+    produto.Nome = nome;
+    produtos.Add(produto);
+
+    return Results.Ok(produtos);
 });
 
 // Criar uma funcionalidade para receber informação
