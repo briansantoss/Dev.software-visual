@@ -4,5 +4,7 @@ GET http://localhost:5262
 ### Testando a segunda funcionalidade
 GET http://localhost:5262/segundafunc
 
-###
-GET https://localhost:5262/retornarendereco
+### Testando o retorno do endereço
+GET http://localhost:5262/retornarendereco
+### Testando a listagem de produtos
+GET  http://localhost:5262/produto/listar
