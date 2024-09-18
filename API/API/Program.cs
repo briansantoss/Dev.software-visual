@@ -1,4 +1,5 @@
 using API.Models;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
@@ -30,17 +31,54 @@ app.MapGet("/", () => "API de Produtos");
 // GET: /produto/listar
 app.MapGet("/produto/listar", () => 
 {
-    return Results.Ok(produtos);
+    if (produtos.Any()) {
+        return Results.Ok(produtos);
+    }
+    return Results.NotFound();
 });
 
 // POST: /produto/cadastrar
-app.MapPost("/produto/cadastrar/{nome}", (string nome) => 
+app.MapPost("/produto/cadastrar", ([FromBody] Produto produto) => 
 {
-    Produto produto = new Produto();
-    produto.Nome = nome;
     produtos.Add(produto);
+    return Results.Created("", produto);
+});
 
-    return Results.Ok(produtos);
+app.MapGet("/produto/buscar/{nome}", (string nome) =>
+{
+    foreach (Produto produtoCadastrado in produtos)
+    {
+        if (produtoCadastrado.Nome == nome) 
+        {
+            return Results.Ok(produtoCadastrado);
+        }
+    }
+    return Results.NotFound();
+});
+
+app.MapPost("/produto/remover/{nome}", (string nome) =>
+{
+    foreach(Produto produtoCadastrado in produtos)
+    {
+        if (produtoCadastrado.Nome == nome) 
+        {
+            Produto temp = produtoCadastrado;
+            produtos.Remove(produtoCadastrado);
+            return Results.Ok(temp);
+        }
+    }
+    return Results.NotFound("Produto não cadastrado");
+}
+);
+
+app.MapPost("/produto/alterar/{nome}", (string nome, [FromBody] Produto produtoModificado) => 
+{
+    int index = produtos.FindIndex(produto => produto.Nome == nome);
+    if ( index != -1) 
+    {
+        return Results.Ok(produtos.)
+    }
+    return Results.NotFound("Produto não cadastrado");
 });
 
 // Criar uma funcionalidade para receber informação

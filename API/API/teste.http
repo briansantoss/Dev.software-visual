@@ -11,4 +11,19 @@ GET http://localhost:5262/retornarendereco
 GET  http://localhost:5262/produto/listar
 
 ###
-POST http://localhost:5262/produto/cadastrar/agua
+POST http://localhost:5262/produto/cadastrar
+Content-Type: application/json
+
+{
+    "nome": "Bolacha Trakinas",
+    "preco": 4.5,
+    "quantidade": 34 
+}
+
+###
+GET http://localhost:5262/produto/buscar/Bolacha%20Trakinas
+###
+POST http://localhost:5262/produto/remover/Teclado
+
+###
+POST http://localhost:5262/produto/alterar/Notebook
