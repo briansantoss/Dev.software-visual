@@ -1,16 +1,7 @@
 ### Testando a segunda funcionalidade
 GET http://localhost:5262
 
-### Testando a segunda funcionalidade
-GET http://localhost:5262/segundafunc
-
-### Testando o retorno do endereço
-GET http://localhost:5262/retornarendereco
-
-### Testando a listagem de produtos
-GET  http://localhost:5262/produto/listar
-
-###
+### Testando o cadastro de produtos
 POST http://localhost:5262/produto/cadastrar
 Content-Type: application/json
 
@@ -20,10 +11,21 @@ Content-Type: application/json
     "quantidade": 34 
 }
 
-###
-GET http://localhost:5262/produto/buscar/Bolacha%20Trakinas
-###
-POST http://localhost:5262/produto/remover/Teclado
+### Testando a modificação das informações de um produto disponível
+POST http://localhost:5262/produto/alterar/Teclado
+Content-Type: application/json
 
-###
-POST http://localhost:5262/produto/alterar/Notebook
+{
+    "nome": "PS5",
+    "preco": 5250,
+    "quantidade": 32
+}
+
+### Testando a listagem de produtos
+GET  http://localhost:5262/produto/listar
+
+### Testando a busca por produtos
+GET http://localhost:5262/produto/buscar/Teclado
+
+### Testando a remoção de produtos
+POST http://localhost:5262/produto/remover/PS5
