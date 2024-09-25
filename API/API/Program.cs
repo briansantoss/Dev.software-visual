@@ -44,41 +44,38 @@ app.MapPost("/produto/cadastrar", ([FromBody] Produto produto) =>
     return Results.Created("", produto);
 });
 
-app.MapPost("/produto/remover/{nome}", (string nome) =>
+app.MapDelete("/produto/remover/{nome}", (string nome) =>
 {
-    foreach(Produto produtoCadastrado in produtos)
+    Produto? produto = produtos.Find(x => x.Nome.Equals(nome));
+    if (produto == null) 
     {
-        if (produtoCadastrado.Nome == nome) 
-        {
-            produtos.Remove(produtoCadastrado);
-            return Results.Ok("Remoção realizada com sucesso");
-        }
+        return Results.NotFound("Produto não cadastrado");
     }
-    return Results.NotFound("Produto não cadastrado");
+        produtos.Remove(produto);
+        return Results.Ok("Remoção realizada com sucesso");
 }
 );
 
 app.MapGet("/produto/buscar/{nome}", (string nome) =>
 {
-    foreach (Produto produtoCadastrado in produtos)
+    Produto? produtoBuscado = produtos.Find(p => p.Nome == nome);
+
+    if (produtoBuscado == null) 
     {
-        if (produtoCadastrado.Nome == nome) 
-        {
-            return Results.Ok(produtoCadastrado);
-        }
+        return Results.NotFound();  
     }
-    return Results.NotFound();
+    return Results.Ok(produtoBuscado);   
 });
 
-app.MapPost("/produto/alterar/{nome}", (string nome, [FromBody] Produto produtoModificado) => 
+app.MapPut("/produto/alterar/{nome}", (string nome, [FromBody] Produto produtoModificado) => 
 {
-    int index = produtos.FindIndex(produto => produto.Nome == nome);
-    if ( index != -1) 
+    int indice = produtos.FindIndex(produto => produto.Nome == nome);
+    if (indice == -1) 
     {
-        produtos[index] = produtoModificado;
-        return Results.Ok(produtoModificado);
+        return Results.NotFound("Produto não cadastrado");
     }
-    return Results.NotFound("Produto não cadastrado");
+    produtos[indice] = produtoModificado;
+    return Results.Ok(produtoModificado);
 });
 
 // Criar uma funcionalidade para receber informação

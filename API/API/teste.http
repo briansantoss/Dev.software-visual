@@ -6,9 +6,9 @@ POST http://localhost:5262/produto/cadastrar
 Content-Type: application/json
 
 {
-    "nome": "Bolacha Trakinas",
-    "preco": 4.5,
-    "quantidade": 34 
+    "nome": "Água",
+    "preco": 6.7,
+    "quantidade": 35 
 }
 
 ### Testando a modificação das informações de um produto disponível
@@ -28,4 +28,4 @@ GET  http://localhost:5262/produto/listar
 GET http://localhost:5262/produto/buscar/Teclado
 
 ### Testando a remoção de produtos
-POST http://localhost:5262/produto/remover/PS5
+POST http://localhost:5262/produto/remover/Água
