@@ -2,6 +2,7 @@ using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<AppDataContext>();
 var app = builder.Build();
 
 List<Produto> produtos = new List<Produto>();
@@ -29,37 +30,41 @@ produtos.Add(new Produto()
 app.MapGet("/", () => "API de Produtos");
 
 // GET: /produto/listar
-app.MapGet("/produto/listar", () => 
+app.MapGet("/produto/listar", ([FromServices] AppDataContext context) => 
 {
-    if (produtos.Any()) {
-        return Results.Ok(produtos);
+    // Posso usar o método Count()
+    if (context.Produtos.Any()) {
+        return Results.Ok(context.Produtos.ToList());
     }
     return Results.NotFound();
 });
 
 // POST: /produto/cadastrar
-app.MapPost("/produto/cadastrar", ([FromBody] Produto produto) => 
+app.MapPost("/produto/cadastrar", ([FromBody] Produto produto, [FromServices] AppDataContext context) => 
 {
-    produtos.Add(produto);
+    context.Produtos.Add(produto);
+    context.SaveChanges();
     return Results.Created("", produto);
 });
 
-app.MapDelete("/produto/remover/{nome}", (string nome) =>
+app.MapDelete("/produto/remover/{id}", ([FromRoute] string id, [FromServices] AppDataContext context) =>
 {
-    Produto? produto = produtos.Find(x => x.Nome.Equals(nome));
-    if (produto == null) 
+    Produto? produtoBuscado = context.Produtos.Find(id);  
+    if (produtoBuscado == null) 
     {
         return Results.NotFound("Produto não cadastrado");
     }
-        produtos.Remove(produto);
+        context.Produtos.Remove(produtoBuscado);
+        context.SaveChanges();
         return Results.Ok("Remoção realizada com sucesso");
 }
 );
 
-app.MapGet("/produto/buscar/{nome}", (string nome) =>
+app.MapGet("/produto/buscar/{id}", ([FromRoute] string id, [FromServices] AppDataContext context) =>
 {
-    Produto? produtoBuscado = produtos.Find(p => p.Nome == nome);
-
+    // Busca por outros parâmetros além do id
+    // Produto? produto = context.Produtos.FirstOrDefault(x => x.Id == id);
+    Produto? produtoBuscado = context.Produtos.Find(id);
     if (produtoBuscado == null) 
     {
         return Results.NotFound();  
@@ -67,14 +72,15 @@ app.MapGet("/produto/buscar/{nome}", (string nome) =>
     return Results.Ok(produtoBuscado);   
 });
 
-app.MapPut("/produto/alterar/{nome}", (string nome, [FromBody] Produto produtoModificado) => 
+app.MapPut("/produto/alterar/{id}", ([FromRoute] string id, [FromBody] Produto produtoModificado, [FromServices] AppDataContext context) => 
 {
-    int indice = produtos.FindIndex(produto => produto.Nome == nome);
-    if (indice == -1) 
+    Produto? produtoBuscado = context.Produtos.Find(id);
+    if (produtoBuscado == null) 
     {
-        return Results.NotFound("Produto não cadastrado");
+        return Results.NotFound();  
     }
-    produtos[indice] = produtoModificado;
+    produtoBuscado = produtoModificado;
+    context.SaveChanges();
     return Results.Ok(produtoModificado);
 });
 
