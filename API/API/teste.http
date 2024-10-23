@@ -12,12 +12,13 @@ Content-Type: application/json
 }
 
 ### Testando a modificação das informações de um produto disponível
-PUT http://localhost:5262/produto/alterar/efd10624-7e56-4aed-88a7-57d88c33c14a
+PUT http://localhost:5262/produto/alterar/5323cd8d-f932-4ddf-9db1-bf0aadb53dfa
 Content-Type: application/json
 
 {
     "nome": "PS5",
     "preco": 5250,
+    "descricao": "Console mais famoso da playstation",
     "quantidade": 32
 }
 
@@ -25,7 +26,7 @@ Content-Type: application/json
 GET  http://localhost:5262/produto/listar
 
 ### Testando a busca por produtos
-GET http://localhost:5262/produto/buscar/6c651c64-c365-4456-ad93-1e653271dc78
+GET http://localhost:5262/produto/buscar/5323cd8d-f932-4ddf-9db1-bf0aadb53dfa
 
 ### Testando a remoção de produtos
-DELETE  http://localhost:5262/produto/remover/6c651c64-c365-4456-ad93-1e653271dc78
+DELETE  http://localhost:5262/produto/remover/5323cd8d-f932-4ddf-9db1-bf0aadb53dfa

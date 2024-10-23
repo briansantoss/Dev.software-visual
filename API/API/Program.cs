@@ -5,28 +5,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDataContext>();
 var app = builder.Build();
 
-List<Produto> produtos = new List<Produto>();
-produtos.Add(new Produto()
-{
-    Nome = "Notebook",
-    Preco = 5000,
-    Quantidade = 54
-});
-
-produtos.Add(new Produto() 
-{
-    Nome = "Mouse",
-    Preco = 100,
-    Quantidade = 120
-});
-
-produtos.Add(new Produto()
-{
-    Nome = "Teclado",
-    Preco = 450.45,
-    Quantidade = 24
-});
-
 app.MapGet("/", () => "API de Produtos");
 
 // GET: /produto/listar
@@ -79,10 +57,15 @@ app.MapPut("/produto/alterar/{id}", ([FromRoute] string id, [FromBody] Produto p
     {
         return Results.NotFound();  
     }
-    produtoBuscado = produtoModificado;
+
+    // Modificando atributos/informações a respeito do produto
+    produtoBuscado.Nome = produtoModificado.Nome;
+    produtoBuscado.Descricao = produtoModificado.Descricao;
+    produtoBuscado.Preco = produtoModificado.Preco;
+    produtoBuscado.Quantidade = produtoModificado.Quantidade;
+
     context.SaveChanges();
     return Results.Ok(produtoModificado);
 });
 
-// Criar uma funcionalidade para receber informação
 app.Run();
