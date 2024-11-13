@@ -1,6 +1,33 @@
 ### Testando a segunda funcionalidade
 GET http://localhost:5262
 
+### Testando o cadastro de categorias
+POST http://localhost:5262/categoria/cadastrar
+Content-Type: application/json
+
+{
+    "nome": "Bebida"
+}
+
+### Testando o cadastro de categorias
+POST http://localhost:5262/categoria/cadastrar
+Content-Type: application/json
+
+{
+    "nome": "Tecnologia"
+}
+
+### Testando o cadastro de categorias
+POST http://localhost:5262/categoria/cadastrar
+Content-Type: application/json
+
+{
+    "nome": "Comida"
+}
+
+### Testando a listagem de categorias
+GET  http://localhost:5262/categoria/listar
+
 ### Testando o cadastro de produtos
 POST http://localhost:5262/produto/cadastrar
 Content-Type: application/json
@@ -8,7 +35,8 @@ Content-Type: application/json
 {
     "nome": "Água",
     "preco": 6.7,
-    "quantidade": 35 
+    "quantidade": 35,
+    "categoriaId": 1
 }
 
 ### Testando a modificação das informações de um produto disponível

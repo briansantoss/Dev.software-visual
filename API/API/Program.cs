@@ -1,5 +1,6 @@
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDataContext>();
@@ -15,12 +16,32 @@ var app = builder.Build();
 
 app.MapGet("/", () => "API de Produtos");
 
+// GET: /categoria/listar
+app.MapGet("/categoria/listar", ([FromServices] AppDataContext context) => 
+{
+    // Posso usar o método Count()
+    if (context.Categorias.Any()) 
+    {
+        return Results.Ok(context.Categorias.ToList());
+    }
+    return Results.NotFound();
+});
+
+// POST: /categoria/cadastrar
+app.MapPost("/categoria/cadastrar", ([FromBody] Categoria categoria, [FromServices] AppDataContext context) => 
+{
+    context.Categorias.Add(categoria);
+    context.SaveChanges();
+    return Results.Created("", categoria);
+});
+
 // GET: /produto/listar
 app.MapGet("/produto/listar", ([FromServices] AppDataContext context) => 
 {
     // Posso usar o método Count()
     if (context.Produtos.Any()) {
-        return Results.Ok(context.Produtos.ToList());
+        // Posso passar também a string da propriedade de navegação
+        return Results.Ok(context.Produtos.Include(p => p.Categoria).ToList());
     }
     return Results.NotFound();
 });
@@ -43,8 +64,7 @@ app.MapDelete("/produto/remover/{id}", ([FromRoute] string id, [FromServices] Ap
         context.Produtos.Remove(produtoBuscado);
         context.SaveChanges();
         return Results.Ok("Remoção realizada com sucesso");
-}
-);
+});
 
 app.MapGet("/produto/buscar/{id}", ([FromRoute] string id, [FromServices] AppDataContext context) =>
 {
